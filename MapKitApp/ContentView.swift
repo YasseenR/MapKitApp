@@ -18,20 +18,26 @@ struct Location: Identifiable {
 struct ContentView: View {
     
     let locations = [
-        Location(name: "Buckingham Palace", coordinate: CLLocationCoordinate2D(latitude: 51.501, longitude: -0.141)),
-        Location(name: "Tower of London", coordinate: CLLocationCoordinate2D(latitude: 51.508, longitude: -0.076))
+        Location(name: "Jefferson Station", coordinate: CLLocationCoordinate2D(latitude: 39.9525, longitude: -75.1581)),
+        Location(name: "Suburban Station", coordinate: CLLocationCoordinate2D(latitude: 39.9541, longitude: -75.1669))
     ]
+    
+    @State private var position = MapCameraPosition.region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 39.9526, longitude: -75.165222), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)))
     
     
     var body: some View {
         VStack {
             MapReader { proxy in
-                Map()
-                    .onTapGesture { position in
-                        if let coordinate = proxy.convert(position, from: .local) {
-                            print(coordinate)
-                        }
+                Map(position: $position) {
+                    ForEach(locations) { location in
+                        Marker(location.name, coordinate: location.coordinate)
+                            
+                        
                     }
+                }
+                
+                
+                    
                 
             }
         }
