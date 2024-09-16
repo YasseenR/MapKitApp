@@ -14,6 +14,7 @@ struct Arrival: Codable {
     let direction: String
     let service_type: String
     let destination: String
+    let line: String
     let arrival_time: String
     let status: String
 }
@@ -51,10 +52,32 @@ class ArrivalViewModel: ObservableObject {
     }
 }
 
+struct SecondView: View {
+    @StateObject var arrivalViewModel = ArrivalViewModel()
+    @Binding var stationInput: String
+    
+    var body: some View {
+        List(arrivalViewModel.arrivals, id: \.arrival_time) { arrival in
+                        VStack(alignment: .leading) {
+                            Text(arrival.route)
+                                .font(.headline)
+                            Text("Line: \(arrival.line)")
+                            Text("Destination: \(arrival.line)")
+                            Text("Arrival Time: \(arrival.arrival_time)")
+                            Text("Status: \(arrival.status)")
+                        }
+                    }
+        .onAppear {
+                        arrivalViewModel.fetchArrivals(station: stationInput) // Replace with actual stop ID
+                    }
+        
+    }
+}
+
 
 struct ContentView: View {
     
-    @StateObject var arrivalViewModel = ArrivalViewModel()
+    
     
     let locations = [
         Location(name: "Jefferson Station", coordinate: CLLocationCoordinate2D(latitude: 39.9525, longitude: -75.1581)),
